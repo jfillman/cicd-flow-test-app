@@ -1,18 +1,18 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  generateName: release-on-tag-
+  generateName: branch-created-test-
   annotations:
     pipelinesascode.tekton.dev/on-event: "[push]"
 
-    pipelinesascode.tekton.dev/on-cel-expression: 'body.ref.startsWith("refs/tags/") && body.ref.matches(r"refs/tags/v[0-9]+\.[0-9]+\.[0-9]+")'
+    pipelinesascode.tekton.dev/on-cel-expression: 'body.created == true && body.ref.startsWith("refs/heads/") && body.ref.matches(r"refs/heads/preview/.*")'
     pipelinesascode.tekton.dev/max-keep-runs: "5"
 spec:
   pipelineRef:
     resolver: cluster
     params:
       - { name: kind, value: pipeline }
-      - { name: name, value: release }
+      - { name: name, value: build }
       - { name: namespace, value: platform-catalog }
   params:
     - { name: git-url, value: "{{ repo_url }}" }
@@ -20,8 +20,7 @@ spec:
     - { name: image-repo, value: "ghcr.io/jfillman/cicd-flow-test-app" }
     - { name: app-namespace, value: "app-cicd-flow-test-app-cicd" }
     - { name: app-name, value: "cicd-flow-test-app" }
-    - { name: git-tag, value: "{{ source_branch }}" }
-    - { name: env, value: "staging" }
+
   workspaces:
     - name: source
       volumeClaimTemplate:
