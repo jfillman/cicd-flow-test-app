@@ -4,10 +4,12 @@
 #     Trigger naming, since two different steps now share the "test" stage name)
 #   - "pr-check": git-rooted pull_request->build only (image-repo gets the -pr suffix)
 #   - "release-on-tag": git-rooted tag push->release(staging) as a single-step flow -
-#     exercises the tag/tagPattern trigger path and PaC's release-image reconstruction
-#   - "release-on-publish": git-rooted release.created->release(staging) as a single-step
-#     flow - exercises PaC's on-event: "[release]" against a REAL GitHub Release object
-#     (distinct from a plain tag push, a different webhook/event type entirely)
+#     exercises the tag/tagPattern trigger path and PaC's release-image reconstruction.
+#     Also stands in for "publish a GitHub Release" - confirmed live that Pipelines-as-
+#     Code has no support for GitHub's `release` webhook at all (a real delivery came
+#     back 200/"skipping non supported event"), so event: release.created was tried, found
+#     structurally impossible, and removed from the schema entirely rather than left as a
+#     trap. Publishing a Release creates its own tag, which fires this same trigger.
 #   - "release-then-test": git-rooted push (gated on a marker file, not every push) ->
 #     build->deploy(dev)->release(staging)->test - "release" here is event-chained, not
 #     git-rooted (chained from deploy's service.deployed), so a stage can legally follow
@@ -39,8 +41,6 @@ governance:
   policyCheck: false
   sbom: false
 
-# Trivial edit to live-test onboarding-resync.yaml's fixed "cicd.yaml".pathChanged() CEL
-# expression - see docs/onboarding.md "Keeping onboarding boilerplate in sync".
 notifications:
   slack:
     enabled: false
@@ -74,14 +74,6 @@ pipelines:
       source: git
       event: tag
       tagPattern: "v[0-9]+\\.[0-9]+\\.[0-9]+"
-    steps:
-      - stage: release
-        env: staging
-
-  release-on-publish:
-    trigger:
-      source: git
-      event: release.created
     steps:
       - stage: release
         env: staging
