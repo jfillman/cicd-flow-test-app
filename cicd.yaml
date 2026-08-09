@@ -51,9 +51,13 @@ governance:
   policyCheck: false
   sbom: false
 
+secrets:
+  - name: slack-webhook-url
+
 notifications:
   slack:
-    enabled: false
+    enabled: true
+    channel: "#platform-cicd-test"
 
 pipelines:
   ci:
