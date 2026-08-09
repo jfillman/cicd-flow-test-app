@@ -1,0 +1,65 @@
+# cicd.yaml - deliberately exercises platform-cicd's Phase 3 item 7 multi-flow support:
+#   - "ci": git-rooted push->build->test->deploy(dev), i.e. the ordinary event-chained case
+#   - "pr-check": git-rooted pull_request->build only (image-repo gets the -pr suffix)
+#   - "release-on-tag": git-rooted tag push->release(staging) as a single-step flow -
+#     exercises the tag/tagPattern trigger path and PaC's release-image reconstruction
+apiVersion: platform/v1
+kind: PipelineConfig
+
+build:
+  agent: nodejs-20
+  script: ./build.sh
+  dockerfile: ./Dockerfile
+  unitTest:
+    enabled: true
+    command: ./test.sh
+
+test:
+  enabled: true
+  suite: integration
+
+deploy:
+  lowerEnvironments: [dev]
+  upperEnvironments: []
+  strategy: deployment
+
+governance:
+  sast: false
+  imageScan: false
+  policyCheck: false
+  sbom: false
+
+notifications:
+  slack:
+    enabled: false
+
+pipelines:
+  ci:
+    trigger:
+      source: git
+      event: push
+      branch: main
+    steps:
+      - stage: build
+      - stage: test
+        after: build
+      - stage: deploy
+        after: test
+        env: dev
+
+  pr-check:
+    trigger:
+      source: git
+      event: pull_request
+      branch: main
+    steps:
+      - stage: build
+
+  release-on-tag:
+    trigger:
+      source: git
+      event: tag
+      tagPattern: "v[0-9]+\\.[0-9]+\\.[0-9]+"
+    steps:
+      - stage: release
+        env: staging

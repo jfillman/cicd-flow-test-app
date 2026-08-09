@@ -1,0 +1,17 @@
+{
+  "name": "cicd-flow-test-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Throwaway app for live-testing platform-cicd's multi-flow onboarding (Phase 3 item 7): build->test->deploy chain, pull_request build, and a tag-triggered release flow.",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
