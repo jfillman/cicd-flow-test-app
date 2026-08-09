@@ -1,1 +1,2 @@
 retrigger: rebuilt toolbox image with new schema, re-testing after cache clear
+verify integration-test actually runs after trailing-newline fix
