@@ -57,7 +57,7 @@ secrets:
 notifications:
   slack:
     enabled: true
-    channel: "#platform-cicd-test"
+    channel: "#all-idp-lab"
 
 pipelines:
   ci:
