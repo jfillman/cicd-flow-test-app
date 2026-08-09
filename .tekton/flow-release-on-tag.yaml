@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: release-
+  annotations:
+    pipelinesascode.tekton.dev/on-event: "[push]"
+
+    pipelinesascode.tekton.dev/on-cel-expression: 'body.ref.startsWith("refs/tags/") && body.ref.matches("refs/tags/v[0-9]+\.[0-9]+\.[0-9]+")'
+    pipelinesascode.tekton.dev/max-keep-runs: "5"
+spec:
+  pipelineRef:
+    resolver: cluster
+    params:
+      - { name: kind, value: pipeline }
+      - { name: name, value: release }
+      - { name: namespace, value: platform-catalog }
+  params:
+    - { name: git-url, value: "{{ repo_url }}" }
+    - { name: git-revision, value: "{{ revision }}" }
+    - { name: image-repo, value: "ghcr.io/jfillman/cicd-flow-test-app" }
+    - { name: app-namespace, value: "app-cicd-flow-test-app-cicd" }
+    - { name: app-name, value: "cicd-flow-test-app" }
+    - { name: git-tag, value: "{{ source_branch }}" }
+  workspaces:
+    - name: source
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 1Gi
+  taskRunTemplate:
+    serviceAccountName: pipeline-runner
+  timeouts:
+    pipeline: "1h"
