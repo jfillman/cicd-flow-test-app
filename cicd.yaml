@@ -46,8 +46,8 @@ deploy:
   strategy: deployment
 
 governance:
-  sast: false
-  imageScan: false
+  sast: true
+  imageScan: true
   policyCheck: false
   sbom: false
 
