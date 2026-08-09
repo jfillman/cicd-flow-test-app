@@ -29,6 +29,8 @@ governance:
   policyCheck: false
   sbom: false
 
+# Trivial edit to live-test onboarding-resync.yaml's fixed "cicd.yaml".pathChanged() CEL
+# expression - see docs/onboarding.md "Keeping onboarding boilerplate in sync".
 notifications:
   slack:
     enabled: false
