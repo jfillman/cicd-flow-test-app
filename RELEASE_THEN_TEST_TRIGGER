@@ -1,0 +1,3 @@
+Touching this file's content is what fires the "release-then-test" flow declared in
+cicd.yaml (build->deploy->release->test) - see that flow's own filePathPattern. It has no
+other purpose.

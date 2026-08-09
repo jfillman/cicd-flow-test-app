@@ -1,8 +1,18 @@
 # cicd.yaml - deliberately exercises platform-cicd's Phase 3 item 7 multi-flow support:
-#   - "ci": git-rooted push->build->test->deploy(dev), i.e. the ordinary event-chained case
+#   - "ci": git-rooted push->build->test->test->deploy(dev) - the ordinary event-chained
+#     case, PLUS two consecutive test stages (exercises flow-triggers.yaml's per-step-index
+#     Trigger naming, since two different steps now share the "test" stage name)
 #   - "pr-check": git-rooted pull_request->build only (image-repo gets the -pr suffix)
 #   - "release-on-tag": git-rooted tag push->release(staging) as a single-step flow -
 #     exercises the tag/tagPattern trigger path and PaC's release-image reconstruction
+#   - "release-on-publish": git-rooted release.created->release(staging) as a single-step
+#     flow - exercises PaC's on-event: "[release]" against a REAL GitHub Release object
+#     (distinct from a plain tag push, a different webhook/event type entirely)
+#   - "release-then-test": git-rooted push (gated on a marker file, not every push) ->
+#     build->deploy(dev)->release(staging)->test - "release" here is event-chained, not
+#     git-rooted (chained from deploy's service.deployed), so a stage can legally follow
+#     it; validateFlows only forbids steps after a GIT-ROOTED release. Exercises release's
+#     own change.created event actually being consumable by a later stage.
 apiVersion: platform/v1
 kind: PipelineConfig
 
@@ -45,6 +55,8 @@ pipelines:
       - stage: build
       - stage: test
         after: build
+      - stage: test
+        after: test
       - stage: deploy
         after: test
         env: dev
@@ -65,3 +77,28 @@ pipelines:
     steps:
       - stage: release
         env: staging
+
+  release-on-publish:
+    trigger:
+      source: git
+      event: release.created
+    steps:
+      - stage: release
+        env: staging
+
+  release-then-test:
+    trigger:
+      source: git
+      event: push
+      branch: main
+      filePathPattern: ["RELEASE_THEN_TEST_TRIGGER"]
+    steps:
+      - stage: build
+      - stage: deploy
+        after: build
+        env: dev
+      - stage: release
+        after: deploy
+        env: staging
+      - stage: test
+        after: release
