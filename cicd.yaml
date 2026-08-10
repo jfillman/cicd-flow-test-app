@@ -48,9 +48,10 @@ deploy:
 governance:
   sast: true
   imageScan: false
-  policyCheck: false
+  policyCheck: true
   sbom: false
-
+  allowedCommitSigners:
+    - 7268337+jfillman@users.noreply.github.com
 secrets:
   - name: slack-webhook-url
 
