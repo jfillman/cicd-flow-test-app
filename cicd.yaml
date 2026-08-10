@@ -47,9 +47,9 @@ deploy:
 
 governance:
   sast: true
-  imageScan: false
+  imageScan: true
   policyCheck: true
-  sbom: false
+  sbom: true
   allowedCommitSigners:
     - 7268337+jfillman@users.noreply.github.com
 secrets:
