@@ -4,6 +4,22 @@
 # workspace. This file just packages what's already been built. See
 # platform-cicd's catalog/tasks/build-image.yaml for the two-phase build/package split.
 FROM node:20-alpine
+
+# Live-confirmed Trivy findings (governance.imageScan): every "Node.js (node-pkg)" CVE
+# Trivy reports on this image comes from npm's OWN bundled internal dependencies
+# (/usr/local/lib/node_modules/npm/node_modules/...) shipped inside the node:20-alpine
+# base image - not this app's own dependency tree (confirmed: none of tar/glob/
+# cross-spawn/brace-expansion/minimatch/ip-address/sigstore appear anywhere in this
+# repo's own package-lock.json). This image never runs npm itself (see this file's own
+# header) - only `node server.js` at runtime - so npm's own tooling is pure unused
+# attack surface here; removing it is what actually clears those findings, not a base-
+# image version bump (the CVEs live in npm's vendored deps, which come along in every
+# node:*-alpine tag regardless of Node.js version, until npm ships a fix upstream).
+# apk upgrade patches the other two findings (libssl3/libcrypto3, one Alpine point
+# release behind at build time).
+RUN apk upgrade --no-cache \
+    && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
+
 WORKDIR /app
 COPY package*.json server.js ./
 COPY node_modules ./node_modules
