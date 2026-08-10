@@ -44,9 +44,14 @@ deploy:
   lowerEnvironments: [dev]
   # "staging" must be listed here now that platform-cicd's validateFlows checks a
   # release step's env against this list (previously unenforced - a release step could
-  # declare env: staging with nothing here to back it, silently). See
-  # docs/multi-cluster.md in platform-cicd for the full rationale.
-  upperEnvironments: [staging]
+  # declare env: staging with nothing here to back it, silently). Mapped to the
+  # kind-prod cluster (Phase 3 item 4) - staging now lives on its own cluster, with
+  # ArgoCD there confirming the real sync outcome back to platform-cicd instead of a
+  # same-cluster kubectl patch. See docs/multi-cluster.md in platform-cicd for the
+  # full rationale.
+  upperEnvironments:
+    - name: staging
+      cluster: kind-prod
   strategy: deployment
 
 governance:
