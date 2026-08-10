@@ -52,6 +52,7 @@ governance:
   sbom: true
   allowedCommitSigners:
     - 7268337+jfillman@users.noreply.github.com
+
 secrets:
   - name: slack-webhook-url
 
