@@ -42,7 +42,11 @@ test:
 
 deploy:
   lowerEnvironments: [dev]
-  upperEnvironments: []
+  # "staging" must be listed here now that platform-cicd's validateFlows checks a
+  # release step's env against this list (previously unenforced - a release step could
+  # declare env: staging with nothing here to back it, silently). See
+  # docs/multi-cluster.md in platform-cicd for the full rationale.
+  upperEnvironments: [staging]
   strategy: deployment
 
 governance:
