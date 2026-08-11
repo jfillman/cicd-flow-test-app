@@ -1,6 +1,6 @@
 {
   "name": "cicd-flow-test-app",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "private": true,
   "description": "Throwaway app for live-testing platform-cicd's multi-flow onboarding (Phase 3 item 7): build->test->deploy chain, pull_request build, and a tag-triggered release flow.",
   "main": "server.js",
