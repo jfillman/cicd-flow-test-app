@@ -21,10 +21,10 @@
 # the app chart), not baked into the toolbox image - a template edit takes effect on
 # THIS Application's own next `helm upgrade`, no image rebuild needed.
 #
-# app-cicd-flow-test-app-cicd, cicd-flow-test-app, jfillman, and (if this Application declared a release stage)
-# https://github.com/jfillman/gitops-cicd-flow-test-app are filled in by deliver-onboarding-files.yaml itself when it
-# delivers this file - see that Task's own substitution loop, which includes this file
-# alongside push.yaml/pull-request.yaml.
+# app-cicd-flow-test-app-cicd, cicd-flow-test-app, app, jfillman, and (if this Application
+# declared a release stage) https://github.com/jfillman/gitops-cicd-flow-test-app are filled in by deliver-onboarding-files.yaml
+# itself when it delivers this file - see that Task's own substitution loop, which
+# includes this file alongside push.yaml/pull-request.yaml.
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
@@ -45,6 +45,7 @@ spec:
     - { name: git-url, value: "{{ repo_url }}" }
     - { name: app-namespace, value: "app-cicd-flow-test-app-cicd" }
     - { name: app-name, value: "cicd-flow-test-app" }
+    - { name: app-type, value: "app" }
     - { name: github-owner, value: "jfillman" }
     - { name: gitops-repo-url, value: "https://github.com/jfillman/gitops-cicd-flow-test-app" }
   taskRunTemplate:

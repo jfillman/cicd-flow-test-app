@@ -20,6 +20,7 @@ spec:
     - { name: image-repo, value: "ghcr.io/jfillman/cicd-flow-test-app" }
     - { name: app-namespace, value: "app-cicd-flow-test-app-cicd" }
     - { name: app-name, value: "cicd-flow-test-app" }
+    - { name: app-type, value: "app" }
 
   workspaces:
     - name: source
