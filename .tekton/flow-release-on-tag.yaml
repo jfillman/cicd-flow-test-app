@@ -20,8 +20,10 @@ spec:
     - { name: image-repo, value: "ghcr.io/jfillman/cicd-flow-test-app" }
     - { name: app-namespace, value: "app-cicd-flow-test-app-cicd" }
     - { name: app-name, value: "cicd-flow-test-app" }
+    - { name: app-type, value: "app" }
     - { name: git-tag, value: "{{ source_branch }}" }
     - { name: env, value: "staging" }
+    - { name: cluster, value: "kind-prod" }
   workspaces:
     - name: source
       volumeClaimTemplate:
