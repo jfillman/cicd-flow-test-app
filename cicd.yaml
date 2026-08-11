@@ -103,6 +103,7 @@ pipelines:
     steps:
       - stage: release
         env: staging
+        cluster: kind-prod
 
   release-then-test:
     trigger:
@@ -116,6 +117,7 @@ pipelines:
         env: dev
       - stage: release
         env: staging
+        cluster: kind-prod
       - stage: test
         env: staging
 
