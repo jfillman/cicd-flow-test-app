@@ -2,6 +2,10 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: release-then-test-
+  labels:
+    platform.io/flow: "release-then-test"
+    platform.io/stage: "build"
+    platform.io/step-index: "0"
   annotations:
     pipelinesascode.tekton.dev/on-event: "[push]"
     pipelinesascode.tekton.dev/on-target-branch: "[main]"
@@ -21,6 +25,7 @@ spec:
     - { name: app-namespace, value: "app-cicd-flow-test-app-cicd" }
     - { name: app-name, value: "cicd-flow-test-app" }
     - { name: app-type, value: "app" }
+    - { name: is-flow-terminal, value: "false" }
 
   workspaces:
     - name: source
