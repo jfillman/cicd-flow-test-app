@@ -86,7 +86,10 @@ pipelines:
         suite: integration
       - stage: deploy
         env: dev
-
+      - stage: release
+        env: staging
+        cluster: kind-prod
+        
   pr-check:
     trigger:
       source: git
