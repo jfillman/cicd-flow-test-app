@@ -28,14 +28,6 @@
 apiVersion: platform/v1
 kind: PipelineConfig
 
-platformIdentity:
-  appName: cicd-flow-test-app
-  type: app
-  gitopsRepoUrl: https://github.com/jfillman/gitops-cicd-flow-test-app
-  appRepoUrl: https://github.com/jfillman/cicd-flow-test-app
-  githubOwner: jfillman
-  catalogNamespace: platform-catalog
-
 build:
   agent: nodejs-20
   script: ./build.sh
