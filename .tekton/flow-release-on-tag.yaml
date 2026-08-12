@@ -2,6 +2,10 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: release-on-tag-
+  labels:
+    platform.io/flow: "release-on-tag"
+    platform.io/stage: "release"
+    platform.io/step-index: "0"
   annotations:
     pipelinesascode.tekton.dev/on-event: "[push]"
 
@@ -21,6 +25,7 @@ spec:
     - { name: app-namespace, value: "app-cicd-flow-test-app-cicd" }
     - { name: app-name, value: "cicd-flow-test-app" }
     - { name: app-type, value: "app" }
+    - { name: is-flow-terminal, value: "true" }
     - { name: git-tag, value: "{{ source_branch }}" }
     - { name: env, value: "staging" }
     - { name: cluster, value: "kind-prod" }
