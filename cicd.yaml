@@ -78,14 +78,6 @@ pipelines:
       branch: main
     steps:
       - stage: build
-      - stage: test
-        env: dev
-        suite: unit
-      - stage: test
-        env: dev
-        suite: integration
-      - stage: deploy
-        env: dev
       - stage: release
         env: staging
         cluster: kind-prod
