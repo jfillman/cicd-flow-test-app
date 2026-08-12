@@ -2,6 +2,10 @@ apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
   generateName: pr-check-
+  labels:
+    platform.io/flow: "pr-check"
+    platform.io/stage: "build"
+    platform.io/step-index: "0"
   annotations:
     pipelinesascode.tekton.dev/on-event: "[pull_request]"
     pipelinesascode.tekton.dev/on-target-branch: "[main]"
@@ -21,6 +25,7 @@ spec:
     - { name: app-namespace, value: "app-cicd-flow-test-app-cicd" }
     - { name: app-name, value: "cicd-flow-test-app" }
     - { name: app-type, value: "app" }
+    - { name: is-flow-terminal, value: "true" }
 
   workspaces:
     - name: source
